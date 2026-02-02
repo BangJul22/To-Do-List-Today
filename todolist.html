@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist Kegiatan Harian</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #000102;
+            margin: 0;
+            padding: 16px;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .date {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 6px 0;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        input[type="checkbox"] {
+            transform: scale(1.2);
+            margin-right: 10px;
+        }
+
+        /* ===== WARNA TIAP WAKTU ===== */
+        .pagi h3 {
+            color: #0d6efd;
+        }
+
+        .pagi label {
+            background: #e7f1ff;
+        }
+
+        .siang h3 {
+            color: #f0ad4e;
+        }
+
+        .siang label {
+            background: #fff7e6;
+        }
+
+        .sore h3 {
+            color: #fd7e14;
+        }
+
+        .sore label {
+            background: #fff0e6;
+        }
+
+        .malam h3 {
+            color: #6f42c1;
+        }
+
+        .malam label {
+            background: #f3edff;
+        }
+
+        .item {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .item span {
+            transition: all 0.3s ease;
+        }
+
+        /* UMUM (semua waktu) */
+        .item:has(input:checked) {
+            font-weight: bold;
+            border: 2px solid #000;
+            transform: scale(1.02);
+        }
+
+        /* ===== WARNA KHUSUS TIAP WAKTU SAAT DICENTANG ===== */
+        .pagi .item:has(input:checked) {
+            background: #0d6efd;
+            color: #fff;
+            border-color: #0b5ed7;
+        }
+
+        .siang .item:has(input:checked) {
+            background: #f0ad4e;
+            color: #000;
+            border-color: #e0a800;
+        }
+
+        .sore .item:has(input:checked) {
+            background: #fd7e14;
+            color: #fff;
+            border-color: #e8590c;
+        }
+
+        .malam .item:has(input:checked) {
+            background: #6f42c1;
+            color: #fff;
+            border-color: #59339d;
+        }
+
+        /* Checkbox tetap kelihatan */
+        .item input {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .progress-box {
+            background: #eef2ff;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .add-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .add-box select,
+        .add-box input {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .add-box input {
+            flex: 1;
+        }
+
+        .add-box button {
+            border: none;
+            border-radius: 6px;
+            background: #0d6efd;
+            color: white;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 480px) {
+            h3 {
+                font-size: 16px;
+            }
+
+            label {
+                font-size: 14px;
+            }
+        }
+
+        .extra .item {
+            position: relative;
+            padding-right: 36px;
+        }
+
+        .delete-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 14px;
+            cursor: pointer;
+            line-height: 22px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>📝 To Do List Today</h2>
+        <div class="date" id="todayDate"></div>
+
+        <div class="progress-box">
+            <strong>📊 Kemajuan Hari Ini:</strong>
+            <span id="progressText">0 kegiatan selesai</span>
+        </div>
+
+
+        <div class="pagi">
+            <h3>🌅 Pagi</h3>
+
+            <label class="item">
+                <input type="checkbox" data-id="bangun">
+                <span>Bangun tidur</span>
+            </label>
+
+            <label class="item">
+                <input type="checkbox" data-id="subuh">
+                <span>Sholat Subuh</span>
+            </label>
+
+            <label class="item">
+                <input type="checkbox" data-id="rapi">
+                <span>Merapikan tempat tidur</span>
+            </label>
+
+            <label class="item">
+                <input type="checkbox" data-id="mandi">
+                <span>Mandi pagi</span>
+            </label>
+
+            <label class="item">
+                <input type="checkbox" data-id="sarapan">
+                <span>Sarapan</span>
+            </label>
+            <div class="extra" id="extra-pagi"></div>
+        </div>
+
+        <div class="siang">
+            <h3>🌤️ Siang</h3>
+
+            <label class="item">
+                <input type="checkbox" data-id="dzuhur">
+                <span>Sholat Dzuhur</span>
+            </label>
+
+            <label class="item">
+                <input type="checkbox" data-id="makan_siang">
+                <span>Makan siang</span>
+            </label>
+
+            <label class="item">
+                <input type="checkbox" data-id="kerja">
+                <span>Bekerja / Belajar</span>
+            </label>
+            <label class="item">
+                <input type="checkbox" data-id="film">
+                <span>Nonton Film</span>
+            </label>
+            <div class="extra" id="extra-siang"></div>
+        </div>
+
+        <div class="sore">
+            <h3>🌇 Sore</h3>
+
+            <label class="item">
+                <input type="checkbox" data-id="ashar">
+                <span>Sholat Ashar</span>
+            </label>
+
+            <label class="item">
+                <input type="checkbox" data-id="bersih">
+                <span>Membersihkan rumah</span>
+            </label>
+            <div class="extra" id="extra-sore"></div>
+        </div>
+
+        <div class="malam">
+            <h3>🌙 Malam</h3>
+
+            <label class="item">
+                <input type="checkbox" data-id="magrib">
+                <span>Sholat Magrib</span>
+            </label>
+
+            <label class="item">
+                <input type="checkbox" data-id="isya">
+                <span>Sholat Isya</span>
+            </label>
+
+            <label class="item">
+                <input type="checkbox" data-id="tidur">
+                <span>Tidur</span>
+            </label>
+            <div class="extra" id="extra-malam"></div>
+        </div>
+
+        <div class="add-box">
+            <select id="timeSelect">
+                <option value="pagi">🌅 Pagi</option>
+                <option value="siang">🌤️ Siang</option>
+                <option value="sore">🌇 Sore</option>
+                <option value="malam">🌙 Malam</option>
+            </select>
+
+            <input type="text" id="newActivity" placeholder="Nama kegiatan...">
+            <button onclick="addActivity()">➕ Tambah</button>
+        </div>
+
+
+    </div>
+
+
+    <script>
+        const today = new Date().toLocaleDateString("id-ID");
+        document.getElementById("todayDate").innerText = "Hari ini: " + today;
+
+        const savedDate = localStorage.getItem("checklistDate");
+
+        // RESET checklist tiap hari (tanpa hapus riwayat)
+        if (savedDate !== today) {
+            document.querySelectorAll("input[type='checkbox']").forEach(cb => cb.checked = false);
+            localStorage.setItem("checklistDate", today);
+        }
+
+        // LOAD CHECKLIST
+        const checkboxes = document.querySelectorAll("input[type='checkbox']");
+        checkboxes.forEach(cb => {
+            const id = today + "_" + cb.dataset.id;
+            cb.checked = localStorage.getItem(id) === "true";
+
+            cb.addEventListener("change", updateProgress);
+        });
+
+        function updateProgress() {
+            let done = 0;
+
+            checkboxes.forEach(cb => {
+                const id = today + "_" + cb.dataset.id;
+                localStorage.setItem(id, cb.checked);
+                if (cb.checked) done++;
+            });
+
+            // simpan kemajuan harian
+            localStorage.setItem("progress_" + today, done);
+
+            document.getElementById("progressText").innerText =
+                done + " kegiatan selesai";
+        }
+
+        // LOAD PROGRESS
+        const savedProgress = localStorage.getItem("progress_" + today);
+        document.getElementById("progressText").innerText =
+            savedProgress ? savedProgress + " kegiatan selesai" : "0 kegiatan selesai";
+
+
+        const activityKey = "activities_" + today;
+
+        // load data
+        let activityData = JSON.parse(localStorage.getItem(activityKey)) || {
+            pagi: [],
+            siang: [],
+            sore: [],
+            malam: []
+        };
+
+        // render saat load
+        for (const waktu in activityData) {
+            activityData[waktu].forEach(text => {
+                renderActivity(waktu, text);
+            });
+        }
+
+        function addActivity() {
+            const text = document.getElementById("newActivity").value.trim();
+            const waktu = document.getElementById("timeSelect").value;
+            if (!text) return;
+
+            activityData[waktu].push(text);
+            localStorage.setItem(activityKey, JSON.stringify(activityData));
+
+            renderActivity(waktu, text);
+            document.getElementById("newActivity").value = "";
+        }
+
+        function renderActivity(waktu, text) {
+            const container = document.getElementById("extra-" + waktu);
+
+            const label = document.createElement("label");
+            label.className = "item";
+
+            label.innerHTML = `
+        <input type="checkbox" data-id="${waktu}_${text}">
+        <span>${text}</span>
+        <button class="delete-btn" onclick="deleteActivity('${waktu}','${text}', this)">×</button>
+    `;
+
+            container.appendChild(label);
+        }
+
+        function deleteActivity(waktu, text, btn) {
+            // hapus dari data
+            activityData[waktu] = activityData[waktu].filter(item => item !== text);
+            localStorage.setItem(activityKey, JSON.stringify(activityData));
+
+            // hapus dari tampilan
+            btn.parentElement.remove();
+        }
+    </script>
+
+
+</body>
+
+</html>
